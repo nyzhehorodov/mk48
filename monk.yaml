@@ -1,0 +1,33 @@
+namespace: mk48
+
+mk48-admin-interface:
+  defines: runnable
+  metadata:
+    name: mk48-admin-interface
+    description: Node.js-based admin interface for the Mk48.io game
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    mk48-admin-interface:
+      image: env-2139.registry.local/mk48-admin-interface:main-ae55b6d
+      build: .
+      dockerfile: Dockerfile.mk48-admin-interface
+  services:
+    admin-interface:
+      description: Port for the Mk48.io admin interface
+      container: mk48-admin-interface
+      port: 5000
+      host-port: 5000
+      publish: true
+      protocol: tcp
+  connections: {}
+  variables:
+    rollup-watch:
+      env: ROLLUP_WATCH
+      type: bool
+      value: true
+      description: Determines if Rollup should watch files and rebuild automatically
+
+stack:
+  defines: group
+  members:
+    - mk48/mk48-admin-interface
