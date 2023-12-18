@@ -1,0 +1,64 @@
+namespace: mk48
+
+database:
+  defines: runnable
+  inherits: app-tutorial/database
+  metadata:
+    name: database
+    description: Database service used by the server component, exact type is unspecified.
+    icon: >-
+      https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRA8VbFgxH-i78AZmNqD93mVRkTRd30POqLeCmg9T05ug&s
+  variables:
+    mongo-image:
+      type: string
+      value: latest
+      description: ''
+    mongo-init-database:
+      type: string
+      value: mongo
+      description: ''
+    mongo-init-password:
+      type: string
+      value: password
+      description: ''
+    mongo-init-username:
+      type: string
+      value: mongo
+      description: ''
+    mongodb-image:
+      type: string
+      value: latest
+      description: ''
+
+admin-interface:
+  defines: runnable
+  metadata:
+    name: admin-interface
+    description: Optional admin interface for the game, built with NodeJS.
+    icon: https://emojiapi.dev/api/v1/robot.svg
+  containers:
+    admin-interface:
+      image: env-4297.registry.local/admin-interface:main-ae55b6d
+      build: .
+      dockerfile: Dockerfile.admin-interface
+  services:
+    admin-interface-port:
+      description: Port for the optional admin interface
+      container: admin-interface
+      port: 3000
+      host-port: 3000
+      publish: true
+      protocol: tcp
+  connections: {}
+  variables:
+    rollup-watch:
+      env: ROLLUP_WATCH
+      type: bool
+      value: false
+      description: Used by Rollup to watch for changes in development mode
+
+stack:
+  defines: group
+  members:
+    - mk48/database
+    - mk48/admin-interface
